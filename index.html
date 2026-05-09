@@ -3,325 +3,161 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>乡村小院租房登记（中介版）</title>
+<title>乡村小院租房登记</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:"微软雅黑",sans-serif;background:#f5f7fa;color:#333;}
 header{background:#2c3e50;color:#fff;padding:1rem;text-align:center;}
-nav{background:#34495e;display:flex;justify-content:center;flex-wrap:wrap;}
-nav a{color:#fff;padding:1rem 1.5rem;text-decoration:none;}
-nav a:hover,nav a.active{background:#2980b9;}
-.container{max-width:800px;margin:2rem auto;padding:0 1rem;}
-.card{background:#fff;padding:1.5rem;border-radius:8px;box-shadow:0 2px 8px #0002;margin-bottom:2rem;}
-h2{margin-bottom:1rem;color:#2c3e50;}
+.container{max-width:800px;margin:1rem auto;padding:0 1rem;}
+.card{background:#fff;padding:1.5rem;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);margin-bottom:2rem;}
+h2{margin-bottom:1rem;color:#2c3e50;text-align:center;}
 .form-group{margin-bottom:1rem;}
 label{display:block;margin-bottom:0.5rem;font-weight:bold;}
-input,select,textarea{width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:4px;font-size:1rem;}
-button{background:#2980b9;color:#fff;border:none;padding:0.75rem 1.5rem;border-radius:4px;font-size:1rem;cursor:pointer;}
+input,select,textarea{width:100%;padding:0.75rem;border:1px solid #ddd;border-radius:6px;font-size:1rem;}
+button{background:#2980b9;color:#fff;border:none;padding:0.8rem 1.5rem;border-radius:6px;font-size:1rem;width:100%;cursor:pointer;}
 button:hover{background:#1f6aa5;}
-table{width:100%;border-collapse:collapse;margin-top:1rem;}
-th,td{border:1px solid #ddd;padding:0.75rem;text-align:center;}
-th{background:#f0f3f5;}
-.tabs{display:flex;margin-bottom:1rem;}
-.tab{flex:1;text-align:center;padding:0.75rem;background:#eee;cursor:pointer;}
+.tabs{display:flex;margin-bottom:1rem;border-radius:6px;overflow:hidden;}
+.tab{flex:1;text-align:center;padding:0.8rem;background:#eee;cursor:pointer;font-weight:bold;}
 .tab.active{background:#2980b9;color:#fff;}
-.tab-content{display:none;}
-.tab-content.active{display:block;}
-.btn-sm{padding:0.5rem 1rem;font-size:0.9rem;}
+#admin-bar{display:none;}
 </style>
 </head>
 <body>
-<header><h1>乡村小院租房登记（中介专用）</h1></header>
-<nav>
-  <a href="#" class="active" onclick="showTab('form-tab')">登记表单</a>
-  <a href="#" onclick="showTab('list-tab')">数据列表</a>
-  <a href="#" onclick="exportExcel()">导出Excel</a>
-  <a href="#" onclick="clearAll()">清空所有数据</a>
-</nav>
+
+<header>
+  <h1>乡村小院租房登记</h1>
+</header>
+
 <div class="container">
-  <!-- 标签切换：表单 / 列表 -->
-  <div id="form-tab" class="tab-content active">
-    <div class="tabs">
-      <div class="tab active" onclick="switchForm('landlord')">房东登记</div>
-      <div class="tab" onclick="switchForm('renter')">租客登记</div>
-    </div>
-
-    <!-- 房东表单 -->
-    <div id="landlord-form" class="card">
-      <h2>房东小院房源登记</h2>
-      <div class="form-group">
-        <label>业主姓名</label>
-        <input id="ll-name" type="text" placeholder="请输入姓名">
-      </div>
-      <div class="form-group">
-        <label>联系电话</label>
-        <input id="ll-phone" type="tel" placeholder="请输入手机号">
-      </div>
-      <div class="form-group">
-        <label>小院位置（江夏XX村）</label>
-        <input id="ll-address" type="text" placeholder="例如：江夏区五里界镇XX村">
-      </div>
-      <div class="form-group">
-        <label>户型（几室几厅+院子）</label>
-        <input id="ll-house-type" type="text" placeholder="例如：3室2厅，独门独院">
-      </div>
-      <div class="form-group">
-        <label>是否独门独院</label>
-        <select id="ll-alone">
-          <option value="是">是</option>
-          <option value="否">否</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>能否拎包入住</label>
-        <select id="ll-ready">
-          <option value="能">能</option>
-          <option value="否">否</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>期望月租（元）</label>
-        <input id="ll-price" type="number" placeholder="例如：1500">
-      </div>
-      <div class="form-group">
-        <label>租赁类型（可多选，用逗号分隔）</label>
-        <input id="ll-term" type="text" placeholder="长租,短租,周末旅居">
-      </div>
-      <div class="form-group">
-        <label>配套（可多选，用逗号分隔）</label>
-        <input id="ll-facility" type="text" placeholder="停车,民用水电,菜园">
-      </div>
-      <div class="form-group">
-        <label>备注</label>
-        <textarea id="ll-remark" rows="3" placeholder="其他说明"></textarea>
-      </div>
-      <button onclick="submitLandlord()">提交房源</button>
-    </div>
-
-    <!-- 租客表单 -->
-    <div id="renter-form" class="card" style="display:none;">
-      <h2>租客求租需求登记</h2>
-      <div class="form-group">
-        <label>姓名</label>
-        <input id="rt-name" type="text" placeholder="请输入姓名">
-      </div>
-      <div class="form-group">
-        <label>联系电话</label>
-        <input id="rt-phone" type="tel" placeholder="请输入手机号">
-      </div>
-      <div class="form-group">
-        <label>意向区域（江夏XX村/镇）</label>
-        <input id="rt-area" type="text" placeholder="例如：梁子湖周边、安山街道">
-      </div>
-      <div class="form-group">
-        <label>租房类型</label>
-        <select id="rt-type">
-          <option value="长租">长租</option>
-          <option value="短租">短租</option>
-          <option value="周末旅居">周末旅居</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>预算月租（元）</label>
-        <input id="rt-budget" type="number" placeholder="例如：2000">
-      </div>
-      <div class="form-group">
-        <label>入住人数</label>
-        <input id="rt-people" type="number" placeholder="例如：2">
-      </div>
-      <div class="form-group">
-        <label>必需要求（可多选，用逗号分隔）</label>
-        <input id="rt-needs" type="text" placeholder="独门独院,安静,能做饭,可停车">
-      </div>
-      <div class="form-group">
-        <label>计划入住时间</label>
-        <input id="rt-date" type="date">
-      </div>
-      <div class="form-group">
-        <label>其他要求</label>
-        <textarea id="rt-remark" rows="3" placeholder="个性化需求"></textarea>
-      </div>
-      <button onclick="submitRenter()">提交需求</button>
-    </div>
+  <div class="tabs">
+    <div class="tab active" onclick="showPanel('landlord')">房东房源登记</div>
+    <div class="tab" onclick="showPanel('renter')">租客求租登记</div>
   </div>
 
-  <!-- 数据列表 -->
-  <div id="list-tab" class="tab-content">
-    <div class="card">
-      <h2>房东房源列表</h2>
-      <table id="landlord-table">
-        <thead>
-          <tr>
-            <th>姓名</th><th>电话</th><th>位置</th><th>户型</th><th>月租</th><th>操作</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+  <!-- 房东表单 -->
+  <div id="landlord" class="card">
+    <h2>房东房源登记</h2>
+    <div class="form-group">
+      <label>业主姓名</label>
+      <input id="ll-name" type="text" placeholder="请输入姓名">
     </div>
-    <div class="card">
-      <h2>租客需求列表</h2>
-      <table id="renter-table">
-        <thead>
-          <tr>
-            <th>姓名</th><th>电话</th><th>意向区域</th><th>类型</th><th>预算</th><th>操作</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+    <div class="form-group">
+      <label>联系电话</label>
+      <input id="ll-phone" type="tel" placeholder="请输入手机号">
     </div>
+    <div class="form-group">
+      <label>小院位置（江夏XX村）</label>
+      <input id="ll-address" placeholder="例如：江夏区五里界镇XX村">
+    </div>
+    <div class="form-group">
+      <label>户型（几室几厅+院子）</label>
+      <input id="ll-house-type" placeholder="例如：3室2厅，独门独院">
+    </div>
+    <div class="form-group">
+      <label>是否独门独院</label>
+      <select id="ll-alone">
+        <option>是</option>
+        <option>否</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>能否拎包入住</label>
+      <select id="ll-ready">
+        <option>能</option>
+        <option>否</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>期望月租（元）</label>
+      <input id="ll-price" type="number">
+    </div>
+    <div class="form-group">
+      <label>租赁类型（长租/短租/周末）</label>
+      <input id="ll-term" placeholder="例：长租,短租">
+    </div>
+    <div class="form-group">
+      <label>配套（停车/水电/菜园）</label>
+      <input id="ll-facility" placeholder="例：停车,民用水电">
+    </div>
+    <div class="form-group">
+      <label>备注</label>
+      <textarea id="ll-remark" rows="3"></textarea>
+    </div>
+    <button onclick="submitLandlord()">提交房源信息</button>
+  </div>
+
+  <!-- 租客表单 -->
+  <div id="renter" class="card" style="display:none;">
+    <h2>租客求租登记</h2>
+    <div class="form-group">
+      <label>姓名</label>
+      <input id="rt-name" type="text">
+    </div>
+    <div class="form-group">
+      <label>联系电话</label>
+      <input id="rt-phone" type="tel">
+    </div>
+    <div class="form-group">
+      <label>意向区域（江夏XX村）</label>
+      <input id="rt-area">
+    </div>
+    <div class="form-group">
+      <label>租房类型</label>
+      <select id="rt-type">
+        <option>长租</option>
+        <option>短租</option>
+        <option>周末旅居</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>预算月租（元）</label>
+      <input id="rt-budget" type="number">
+    </div>
+    <div class="form-group">
+      <label>入住人数</label>
+      <input id="rt-people" type="number">
+    </div>
+    <div class="form-group">
+      <label>必需要求</label>
+      <input id="rt-needs" placeholder="独门独院,能做饭,可停车">
+    </div>
+    <div class="form-group">
+      <label>计划入住时间</label>
+      <input id="rt-date" type="date">
+    </div>
+    <div class="form-group">
+      <label>其他需求</label>
+      <textarea id="rt-remark" rows="3"></textarea>
+    </div>
+    <button onclick="submitRenter()">提交求租需求</button>
   </div>
 </div>
 
 <script>
-// 本地存储键名
-const LL_KEY = 'house_landlord';
-const RT_KEY = 'house_renter';
-
-// 初始化
-let landlordList = JSON.parse(localStorage.getItem(LL_KEY)) || [];
-let renterList = JSON.parse(localStorage.getItem(RT_KEY)) || [];
-renderTable();
-
-// 标签切换（表单/列表）
-function showTab(id){
-  document.querySelectorAll('.tab-content').forEach(el=>el.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function showPanel(type) {
+  document.getElementById('landlord').style.display = type=='landlord'?'block':'none';
+  document.getElementById('renter').style.display = type=='renter'?'block':'none';
+  let tabs = document.querySelectorAll('.tab');
+  tabs[0].classList.toggle('active', type=='landlord');
+  tabs[1].classList.toggle('active', type=='renter');
 }
 
-// 切换房东/租客表单
-function switchForm(type){
-  document.querySelectorAll('#form-tab .tab').forEach((el,i)=>{
-    el.classList.toggle('active', (type==='landlord' && i===0) || (type==='renter' && i===1));
-  });
-  document.getElementById('landlord-form').style.display = type==='landlord' ? 'block' : 'none';
-  document.getElementById('renter-form').style.display = type==='renter' ? 'block' : 'none';
-}
-
-// 提交房东
 function submitLandlord(){
-  const data = {
-    name:document.getElementById('ll-name').value.trim(),
-    phone:document.getElementById('ll-phone').value.trim(),
-    address:document.getElementById('ll-address').value.trim(),
-    houseType:document.getElementById('ll-house-type').value.trim(),
-    alone:document.getElementById('ll-alone').value,
-    ready:document.getElementById('ll-ready').value,
-    price:document.getElementById('ll-price').value,
-    term:document.getElementById('ll-term').value.trim(),
-    facility:document.getElementById('ll-facility').value.trim(),
-    remark:document.getElementById('ll-remark').value.trim(),
-    time:new Date().toLocaleString()
-  };
-  if(!data.name || !data.phone || !data.address) return alert('姓名、电话、位置不能为空');
-  landlordList.push(data);
-  localStorage.setItem(LL_KEY, JSON.stringify(landlordList));
+  let name = document.getElementById('ll-name').value;
+  let phone = document.getElementById('ll-phone').value;
+  if(!name || !phone){alert('请填写姓名和电话');return;}
   alert('提交成功！');
-  document.getElementById('landlord-form').reset();
-  renderTable();
+  document.getElementById('landlord').reset();
 }
 
-// 提交租客
 function submitRenter(){
-  const data = {
-    name:document.getElementById('rt-name').value.trim(),
-    phone:document.getElementById('rt-phone').value.trim(),
-    area:document.getElementById('rt-area').value.trim(),
-    type:document.getElementById('rt-type').value,
-    budget:document.getElementById('rt-budget').value,
-    people:document.getElementById('rt-people').value,
-    needs:document.getElementById('rt-needs').value.trim(),
-    date:document.getElementById('rt-date').value,
-    remark:document.getElementById('rt-remark').value.trim(),
-    time:new Date().toLocaleString()
-  };
-  if(!data.name || !data.phone || !data.area) return alert('姓名、电话、意向区域不能为空');
-  renterList.push(data);
-  localStorage.setItem(RT_KEY, JSON.stringify(renterList));
+  let name = document.getElementById('rt-name').value;
+  let phone = document.getElementById('rt-phone').value;
+  if(!name || !phone){alert('请填写姓名和电话');return;}
   alert('提交成功！');
-  document.getElementById('renter-form').reset();
-  renderTable();
-}
-
-// 渲染表格
-function renderTable(){
-  // 房东表
-  let llTbody = document.querySelector('#landlord-table tbody');
-  llTbody.innerHTML = '';
-  landlordList.forEach((item, idx)=>{
-    let tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.phone}</td>
-      <td>${item.address}</td>
-      <td>${item.houseType}</td>
-      <td>${item.price}</td>
-      <td><button class="btn-sm" onclick="delLandlord(${idx})">删除</button></td>
-    `;
-    llTbody.appendChild(tr);
-  });
-
-  // 租客表
-  let rtTbody = document.querySelector('#renter-table tbody');
-  rtTbody.innerHTML = '';
-  renterList.forEach((item, idx)=>{
-    let tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${item.name}</td>
-      <td>${item.phone}</td>
-      <td>${item.area}</td>
-      <td>${item.type}</td>
-      <td>${item.budget}</td>
-      <td><button class="btn-sm" onclick="delRenter(${idx})">删除</button></td>
-    `;
-    rtTbody.appendChild(tr);
-  });
-}
-
-// 删除
-function delLandlord(idx){
-  if(!confirm('确定删除？')) return;
-  landlordList.splice(idx,1);
-  localStorage.setItem(LL_KEY, JSON.stringify(landlordList));
-  renderTable();
-}
-function delRenter(idx){
-  if(!confirm('确定删除？')) return;
-  renterList.splice(idx,1);
-  localStorage.setItem(RT_KEY, JSON.stringify(renterList));
-  renderTable();
-}
-
-// 导出Excel（CSV）
-function exportExcel(){
-  let csv = '';
-  // 房东
-  csv += '房东姓名,电话,位置,户型,独门独院,拎包入住,月租,租赁类型,配套,备注,提交时间\n';
-  landlordList.forEach(item=>{
-    csv += `${item.name},${item.phone},${item.address},${item.houseType},${item.alone},${item.ready},${item.price},${item.term},${item.facility},${item.remark},${item.time}\n`;
-  });
-  csv += '\n租客姓名,电话,意向区域,租房类型,预算,入住人数,必需要求,入住时间,其他要求,提交时间\n';
-  renterList.forEach(item=>{
-    csv += `${item.name},${item.phone},${item.area},${item.type},${item.budget},${item.people},${item.needs},${item.date},${item.remark},${item.time}\n`;
-  });
-  let blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
-  let url = URL.createObjectURL(blob);
-  let a = document.createElement('a');
-  a.href = url;
-  a.download = '租房登记数据.csv';
-  a.click();
-  alert('已导出CSV，可用Excel打开');
-}
-
-// 清空所有
-function clearAll(){
-  if(!confirm('确定清空所有数据？不可恢复！')) return;
-  localStorage.removeItem(LL_KEY);
-  localStorage.removeItem(RT_KEY);
-  landlordList = [];
-  renterList = [];
-  renderTable();
-  alert('已清空');
+  document.getElementById('renter').reset();
 }
 </script>
+
 </body>
 </html>
