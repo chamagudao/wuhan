@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台审核管理</title>
+    <style>
+        body{padding:20px;font-family:Arial;}
+        .item{border:1px solid #ddd;padding:15px;margin:10px 0;border-radius:8px;}
+        .btn{padding:6px 12px;margin:0 5px;cursor:pointer;}
+        .pass{background:#4CAF50;color:#fff;border:none;}
+        .del{background:#f44336;color:#fff;border:none;}
+    </style>
+</head>
+<body>
+    <h2>房源后台审核管理</h2>
+    <div class="item">
+        <h4>通山农村小院</h4>
+        <p>位置：咸宁通山</p>
+        <p>电话：13812345678</p>
+        <button class="btn pass">审核通过 上架</button>
+        <button class="btn del">删除房源</button>
+    </div>
+    <div class="item">
+        <h4>武汉江夏农家院</h4>
+        <p>位置：江夏周边</p>
+        <p>电话：13987654321</p>
+        <button class="btn pass">审核通过 上架</button>
+        <button class="btn del">删除房源</button>
+    </div>
+</body>
+</html>

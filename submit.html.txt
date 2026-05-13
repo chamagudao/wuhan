@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>院落出租登记</title>
+    <style>
+        body{padding:20px;font-family:Arial;background:#f5f7fa;}
+        .box{max-width:600px;margin:0 auto;background:#fff;padding:30px;border-radius:10px;}
+        h2{text-align:center;margin-bottom:20px;}
+        input,textarea,select{width:100%;margin:8px 0;padding:12px;border:1px solid #ddd;border-radius:6px;}
+        button{width:100%;padding:12px;background:#4CAF50;color:#fff;border:none;border-radius:6px;font-size:16px;}
+        .back{display:block;text-align:center;margin-top:20px;color:#2196F3;text-decoration:none;}
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>免费登记 院落出租信息</h2>
+        <input type="text" placeholder="院落标题 例如：通山独门独院" id="title">
+        <input type="text" placeholder="详细位置" id="addr">
+        <input type="text" placeholder="租金价格" id="price">
+        <textarea placeholder="院落简介、配套、优势" rows="4" id="desc"></textarea>
+        <input type="text" placeholder="联系人电话" id="tel">
+        <input type="text" placeholder="上传图片链接（可多张）" id="img">
+        <button onclick="submitData()">提交登记</button>
+        <a href="index.html" class="back">返回房源列表</a>
+    </div>
+
+    <script>
+        function submitData(){
+            alert("提交成功！等待管理员审核，审核通过后自动上架展示");
+        }
+    </script>
+</body>
+</html>
