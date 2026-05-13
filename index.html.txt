@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>农村院落出租 - 房源信息平台</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Microsoft YaHei", sans-serif; }
+        body { background-color: #f5f7fa; color: #333; }
+
+        /* 导航栏 */
+        .navbar { background-color: #2c3e50; color: white; padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; }
+        .nav-links a { color: white; text-decoration: none; margin-left: 2rem; font-size: 1rem; }
+        .nav-links a:hover { color: #3498db; }
+
+        /* 英雄区 */
+        .hero { background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'); background-size: cover; background-position: center; color: white; text-align: center; padding: 5rem 5%; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .hero p { font-size: 1.2rem; margin-bottom: 2rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+        .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+        .btn { padding: 1rem 2rem; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer; text-decoration: none; color: white; font-weight: bold; transition: background 0.3s; }
+        .btn-rent { background-color: #3498db; }
+        .btn-rent:hover { background-color: #2980b9; }
+        .btn-lease { background-color: #27ae60; }
+        .btn-lease:hover { background-color: #229954; }
+
+        /* 内容区 */
+        .container { max-width: 1200px; margin: 3rem auto; padding: 0 5%; }
+        .section-title { text-align: center; margin-bottom: 2rem; font-size: 1.8rem; color: #2c3e50; }
+        .list-card { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 2rem; }
+        .item { background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.3s; }
+        .item:hover { transform: translateY(-5px); }
+        .item-img { width: 100%; height: 200px; object-fit: cover; }
+        .item-info { padding: 1.5rem; }
+        .item-info h3 { margin-bottom: 0.5rem; color: #2c3e50; }
+        .item-info p { color: #666; font-size: 0.95rem; margin: 0.3rem 0; }
+        .tel { color: #e74c3c; font-weight: bold; margin: 0.5rem 0; }
+        .btn-unlock { margin-top: 1rem; background: #3498db; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 5px; cursor: pointer; }
+
+        /* 弹窗 */
+        .mask { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 999; }
+        .popup { background: white; padding: 2rem; border-radius: 10px; width: 90%; max-width: 400px; }
+        .popup h4 { margin-bottom: 1rem; font-size: 1.3rem; color: #2c3e50; }
+        .popup input { width: 100%; margin: 0.5rem 0; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px; }
+        .popup .btns { margin-top: 1rem; display: flex; gap: 1rem; }
+        .popup button { flex: 1; padding: 0.8rem; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+        .submit { background: #3498db; color: white; }
+        .close { background: #eee; }
+
+        /* 隐藏区域 */
+        #rent-section, #lease-section { display: none; }
+        .back-btn { text-align: center; margin: 2rem 0; }
+        .back-btn a { color: #3498db; text-decoration: none; font-size: 1rem; }
+        .back-btn a:hover { text-decoration: underline; }
+
+        /* 底部 */
+        footer { background: #2c3e50; color: white; text-align: center; padding: 2rem 0; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="logo">🏡 乡居小院</div>
+        <div class="nav-links">
+            <a href="#" onclick="showSection('rent')">我要租房</a>
+            <a href="#" onclick="showSection('lease')">我要出租</a>
+        </div>
+    </nav>
+
+    <!-- 首页英雄区 -->
+    <div class="hero" id="hero-section">
+        <h1>找一处乡村小院，享一方宁静生活</h1>
+        <p>专为武汉及周边打造的农村院落出租平台，真实房源，直连房东，无中介费用。</p>
+        <div class="hero-buttons">
+            <a href="#" class="btn btn-rent" onclick="showSection('rent')">我要租房</a>
+            <a href="submit.html" class="btn btn-lease">我要出租</a>
+        </div>
+    </div>
+
+    <!-- 租房列表区 -->
+    <div class="container" id="rent-section">
+        <h2 class="section-title">🏡 精选房源</h2>
+        <div class="list-card" id="list"></div>
+        <div class="back-btn">
+            <a href="#" onclick="showSection('home')">← 返回首页</a>
+        </div>
+    </div>
+
+    <!-- 出租引导区 -->
+    <div class="container" id="lease-section">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto; background: white; padding: 3rem; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+            <h2 class="section-title">发布你的院落信息</h2>
+            <p style="color: #666; margin-bottom: 2rem;">免费发布，快速匹配租客，让你的闲置小院产生价值。</p>
+            <a href="submit.html" class="btn btn-lease">立即登记房源</a>
+            <div class="back-btn" style="margin-top: 2rem;">
+                <a href="#" onclick="showSection('home')">← 返回首页</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 解锁弹窗 -->
+    <div class="mask" id="mask">
+        <div class="popup">
+            <h4>简单登记，解锁完整联系方式</h4>
+            <input type="text" id="userName" placeholder="请输入您的姓名">
+            <input type="text" id="userWechat" placeholder="请输入您的微信/电话">
+            <div class="btns">
+                <button class="submit" onclick="unlockTel()">提交解锁</button>
+                <button class="close" onclick="closeMask()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部 -->
+    <footer>
+        <p>© 2024 乡居小院 | 武汉周边农村院落出租平台</p>
+    </footer>
+
+    <script>
+        let currentTel = '';
+        const houseList = [
+            {id:1,title:"通山农村小院",addr:"咸宁通山乡下",price:"800元/月",desc:"独门独院 带菜地",tel:"13812345678",img:"https://picsum.photos/600/400?random=1"},
+            {id:2,title:"武汉江夏农家院",addr:"江夏周边村庄",price:"1200元/月",desc:"交通便利 适合自住",tel:"13987654321",img:"https://picsum.photos/600/400?random=2"}
+        ];
+
+        function hidePhone(phone){
+            if(!phone) return '';
+            return phone.slice(0,7) + '****';
+        }
+
+        function renderList(){
+            let html = '';
+            houseList.forEach(item=>{
+                html += `
+                <div class="item">
+                    <img src="${item.img}" class="item-img">
+                    <div class="item-info">
+                        <h3>${item.title}</h3>
+                        <p>📍 位置：${item.addr}</p>
+                        <p>💰 租金：${item.price}</p>
+                        <p>📝 简介：${item.desc}</p>
+                        <p class="tel">📞 联系电话：${hidePhone(item.tel)}</p>
+                        <button class="btn-unlock" onclick="openMask('${item.tel}')">点击解锁完整号码</button>
+                    </div>
+                </div>
+                `;
+            });
+            document.getElementById('list').innerHTML = html;
+        }
+
+        function openMask(tel){
+            currentTel = tel;
+            document.getElementById('mask').style.display = 'flex';
+        }
+        function closeMask(){
+            document.getElementById('mask').style.display = 'none';
+        }
+        function unlockTel(){
+            let name = document.getElementById('userName').value.trim();
+            let wx = document.getElementById('userWechat').value.trim();
+            if(!name || !wx){
+                alert('请填写姓名和联系方式');
+                return;
+            }
+            alert('解锁成功！完整电话：' + currentTel);
+            closeMask();
+        }
+
+        function showSection(section){
+            document.getElementById('hero-section').style.display = section === 'home' ? 'block' : 'none';
+            document.getElementById('rent-section').style.display = section === 'rent' ? 'block' : 'none';
+            document.getElementById('lease-section').style.display = section === 'lease' ? 'block' : 'none';
+            window.scrollTo(0, 0);
+        }
+
+        renderList();
+    </script>
+</body>
+</html>
